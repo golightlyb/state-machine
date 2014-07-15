@@ -1,0 +1,10 @@
+.*
+!.gitignore
+*.anjuta
+*.pyc
+/stdout.txt
+/*.png
+/*.gif
+/test.out
+/cppcheck.txt
+/*.pdf

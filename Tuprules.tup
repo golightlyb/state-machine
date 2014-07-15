@@ -1,0 +1,82 @@
+#-------------------------------------------------------------------------------
+# Tup Build Script common logic
+# This is generic to any build
+#-------------------------------------------------------------------------------
+# See gittup.org/tup/
+#-------------------------------------------------------------------------------
+# See also /tup.config, /bin/Tupfile
+#-------------------------------------------------------------------------------
+
+
+.gitignore
+ROOTDIR = $(TUP_CWD)
+
+CFLAGS_COMMON  = -pipe -malign-double
+CFLAGS_LINUX   = -DBSE_LINUX
+CFLAGS_WINDOWS = -DBSE_WINDOWS
+
+LFLAGS_COMMON  = 
+LFLAGS_LINUX   = 
+LFLAGS_WINDOWS = 
+
+ifeq (@(CC_MODE),normal)
+    CFLAGS_COMMON += -O@(OPTIMISATION)
+    LFLAGS_COMMON += -O@(OPTIMISATION)
+endif
+
+ifeq (@(CC_MODE),werror)
+    CFLAGS_COMMON += -O0 -Werror
+    LFLAGS_COMMON += -O0
+endif
+
+ifeq (@(CC_MODE),werrorO2)
+    CFLAGS_COMMON += -O2 -Werror
+    LFLAGS_COMMON += -O2
+endif
+
+ifeq (@(CC_MODE),debug)
+    CFLAGS_COMMON += -O0 -DDEBUG_BUILD
+    LFLAGS_COMMON += -O0
+
+    ifeq (@(DEBUG_FORMAT),gnu)
+         CFLAGS_LINUX += -ggdb@(DEBUG_LEVEL)
+         LFLAGS_LINUX += -ggdb@(DEBUG_LEVEL)
+    else
+        CFLAGS_LINUX += -g@(DEBUG_LEVEL)
+        LFLAGS_LINUX += -g@(DEBUG_LEVEL)
+    endif
+    
+    CFLAGS_WINDOWS += -g@(DEBUG_LEVEL)
+    LFLAGS_WINDOWS += -g@(DEBUG_LEVEL)
+    
+    CFLAGS_LINUX += -DENABLE_STACK_TRACES
+    LFLAGS_LINUX += -ldl
+endif
+
+ifeq (@(CC_MODE),profile)
+    CFLAGS_COMMON += -O0 -pg -DPROFILE_BUILD
+    LFLAGS_COMMON += -O0 -pg
+endif
+
+WARNINGS  = -W -Wall -Wextra
+WARNINGS += -Wconversion -Wshadow -Wimplicit -Wformat=2 -Wfloat-equal
+WARNINGS += -Wcast-qual -Winit-self -Wwrite-strings -Winline -Wundef
+
+INCLUDE  = -iquote $(TUP_CWD)/src/
+
+CFLAGS_COMMON += -std=c99 -pedantic $(INCLUDE)
+CFLAGS_COMMON += -D_XOPEN_SOURCE=700 -D_XOPEN_SOURCE_EXTENDED=1
+
+# Windows 64 needs this to properly support large files
+LARGEFILE = -D_LARGEFILE64_SOURCE=1 -D_FILE_OFFSET_BITS=64
+
+LINUX32_CC = @(LINUX32_CC) $(CFLAGS_COMMON) $(CFLAGS_LINUX) $(LARGEFILE) -DBSE_BITSPACE=32
+LINUX64_CC = @(LINUX64_CC) $(CFLAGS_COMMON) $(CFLAGS_LINUX) $(LARGEFILE) -DBSE_BITSPACE=64
+WIN32_CC   = @(WIN32_CC)   $(CFLAGS_COMMON) $(CFLAGS_WINDOWS) $(LARGEFILE) -DBSE_BITSPACE=32
+WIN64_CC   = @(WIN64_CC)   $(CFLAGS_COMMON) $(CFLAGS_WINDOWS) $(LARGEFILE) -DBSE_BITSPACE=64
+
+LINUX32_LD = @(LINUX32_LD) $(LFLAGS_COMMON)
+LINUX64_LD = @(LINUX64_LD) $(LFLAGS_COMMON)
+WIN32_LD   = @(WIN32_LD)   $(LFLAGS_COMMON)
+WIN64_LD   = @(WIN64_LD)   $(LFLAGS_COMMON)
+
