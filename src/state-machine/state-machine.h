@@ -2,6 +2,9 @@
 #define STATE_MACHINE_H
 
 #include <stddef.h> // size_t
+#include <limits.h> // UINT_MAX
+
+#define STATE_MACHINE_INVALID UINT_MAX
 
 typedef struct state_machine state_machine;
 typedef struct state_machine_memory_manager state_machine_memory_manager;
@@ -57,6 +60,12 @@ int state_machine_add_transition_from_all_states
 unsigned int state_machine_take_action
     (state_machine *m, unsigned int state, unsigned int action);
 
-void state_machine_print(state_machine *m);
+// Given a state ID for a machine, this returns a number >= 0 and
+// < than the total number of states in the machine. This number identifies
+// exactly that state, or returns (-1 for an invalid state.
+unsigned int state_machine_state_index(state_machine *m, unsigned int state);
+
+void state_machine_print
+    (state_machine *m, const char **states, const char **actions);
 
 #endif

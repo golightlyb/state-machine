@@ -1,8 +1,8 @@
 #include "base.h" // eXceptions
 #include "state-machine/state-machine.h"
 #include <stddef.h> // NULL
-#include <string.h> // memcpy
 #include <limits.h> // UINT_MAX
+#include <string.h> // memcpy
 #include <stdio.h> // printf
 #include <assert.h>
 
@@ -107,7 +107,7 @@ int state_machine_clear(state_machine *m)
         { m->state_id[i] = 0; }
         
     for (unsigned int i = 0; i < m->states * m->actions; i++)
-        { m->transitions[i] = UINT_MAX; }
+        { m->transitions[i] = STATE_MACHINE_INVALID; }
     
     return 1;
     
@@ -118,10 +118,10 @@ int state_machine_clear(state_machine *m)
 
 int state_machine_add_state(state_machine *m, unsigned int state)
 {
-    if (!m)         { X(bad_arg); }
-    if (state == 0) { X2(bad_arg, "state must be non-zero"); }
+    if (!m)                { X(bad_arg); }
+    if (state == 0)        { X2(bad_arg, "state must be non-zero"); }
     
-    unsigned int top_state = UINT_MAX;
+    unsigned int top_state = STATE_MACHINE_INVALID;
     for (unsigned int i = 0; i < m->states; i++)
         { if (m->state_id[i] == 0) { top_state = i; break; } }
     
@@ -147,7 +147,7 @@ unsigned int P(state_index)(state_machine *m, unsigned int state_id)
         if (m->state_id[i] == state_id) { return i; }
     }
     
-    return UINT_MAX;
+    return STATE_MACHINE_INVALID;
 }
 
 
@@ -199,6 +199,8 @@ unsigned int state_machine_take_action
     if (!m)                     { X(bad_arg); }
     if (action >= m->actions)   { X2(bad_arg, "invalid action"); }
     
+    printf("take_action\n");
+    
     unsigned int from = P(state_index)(m, state);
     if (from >= m->states) { X2(bad_arg, "invalid state"); }
     
@@ -212,22 +214,40 @@ unsigned int state_machine_take_action
 }
 
 
-void state_machine_print(state_machine *m)
+unsigned int state_machine_state_index(state_machine *m, unsigned int state)
 {
-    if (!m) { printf("state_machine_print: NULL\n"); return; }
+    if (!m) { X(bad_arg); }
+    
+    return P(state_index)(m, state);
+    
+    err_bad_arg:
+        return STATE_MACHINE_INVALID;
+}
+
+
+void state_machine_print
+    (state_machine *m, const char **states, const char **actions)
+{
+    if (!m)       { X(bad_arg); }
+    if (!states)  { X(bad_arg); }
+    if (!actions) { X(bad_arg); }
     
     printf("state_machine_print: %u states %u actions\n", m->states, m->actions);
     
     for (unsigned int i = 0; i < m->states; i++)
     {
-        printf("    state %u:\n", m->state_id[i]);
+        printf("    state %u %s:\n", m->state_id[i], states[i]);
         
         for (unsigned int j = 0; j < m->actions; j++)
         {
             unsigned int to = m->transitions[(i * m->actions) + j];
             if (to >= m->states) { continue; }
             
-            printf("        action %u -> state %u\n", j, m->state_id[to]);
+            printf("        action %u %s -> state %u %s\n",
+                    j, actions[j], m->state_id[to], states[to]);
         }
     }
+    
+    err_bad_arg:
+        return;
 }

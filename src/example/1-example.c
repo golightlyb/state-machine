@@ -7,10 +7,17 @@
 # define STATE_WORKING  4
 # define STATE_BROKEN   8
 
-# define ACTION_TOGGLE 1
-# define ACTION_BREAK  2
-# define ACTION_FIX    3
-# define NUM_ACTIONS 4
+# define ACTION_TOGGLE 0
+# define ACTION_BREAK  1
+# define ACTION_FIX    2
+# define NUM_ACTIONS 3
+
+const char *actions[] =
+{
+    "TOGGLE",
+    "BREAK",
+    "FIX"
+};
 
 int input(void)
 {
@@ -34,6 +41,13 @@ int main(void)
     assert(state_machine_add_state(m, STATE_ON  | STATE_WORKING));
     assert(state_machine_add_state(m, STATE_OFF | STATE_BROKEN));
     
+    const char *states[] =
+    {
+        "STATE_OFF | STATE_WORKING",
+        "STATE_ON  | STATE_WORKING",
+        "STATE_OFF | STATE_BROKEN"
+    };
+    
     assert(state_machine_add_transition(m, ACTION_TOGGLE,
         STATE_OFF | STATE_WORKING,
         STATE_ON  | STATE_WORKING));
@@ -50,7 +64,7 @@ int main(void)
     
     unsigned int state = STATE_OFF | STATE_WORKING;
     
-    state_machine_print(m);
+    state_machine_print(m, states, actions);
     
     while (1)
     {
@@ -63,15 +77,14 @@ int main(void)
         printf("Command? (t: toggle, b: break, f: fix, q: quit)\n");
         
         int c = input();
-        unsigned int action = 0;
+        unsigned int action;
         
         if ((c == 'q') || (c == EOF)) { break; }
         else if (c == 't') { action = ACTION_TOGGLE; }
         else if (c == 'b') { action = ACTION_BREAK;  }
         else if (c == 'f') { action = ACTION_FIX;  }
-        else { printf("Invalid Command %c\n", c); }
+        else { printf("Invalid Command %c\n", c); continue; }
         
-        if (!action) { continue; }
         unsigned int next = state_machine_take_action(m, state, action);
         if (next) { state = next; } else { printf("Nothing happens.\n"); }
     }
