@@ -1,6 +1,6 @@
 /*
  
- src/base.h - common application-wide header
+ src/base.h - common application-wide header, mainly used to provide exceptions
  
  ------------------------------------------------------------------------------
  

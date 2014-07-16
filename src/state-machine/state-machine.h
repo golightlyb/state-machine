@@ -1,3 +1,33 @@
+/*
+ 
+ sstate-machine/state-machine.h
+ 
+ ------------------------------------------------------------------------------
+ 
+ Copyright (c) 2014 Ben Golightly <golightly.ben@googlemail.com>
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ 
+ ------------------------------------------------------------------------------
+ 
+*/
+
 #ifndef STATE_MACHINE_H
 #define STATE_MACHINE_H
 
@@ -9,10 +39,10 @@
 typedef struct state_machine state_machine;
 typedef struct state_machine_memory_manager state_machine_memory_manager;
 
-// Concrete definition of a structure used to indicate how memory should be
-// allocated or deallocated for a state machine. Fill in the function pointers
-// and the user_arg for your memory manager state, if any.
-// Optional: use state_machine_new to use default malloc/free behaviour.
+// Optional: concrete definition of a structure used to indicate how memory
+// should be allocated or deallocated for a state machine. Fill in the function
+// pointers and the user_arg for your memory manager state, if any.
+// Otherwise use state_machine_new to use default malloc/free behaviour.
 struct state_machine_memory_manager
 {
     void *(*allocator)(size_t size, void *user_arg);
@@ -52,6 +82,7 @@ int state_machine_add_transition
 
 // Add a transition from all states in the machine, but only if the ID of a
 // from state is in the given mask. Any existing transitions will be replaced.
+// By "in the given mask" the meaning is where ((state & mask) == mask)
 int state_machine_add_transition_from_all_states
     (state_machine *m, unsigned int action, unsigned int to, unsigned int mask);
 
@@ -70,9 +101,14 @@ unsigned int state_machine_take_action
 
 // Given a state ID for a machine, this returns a number >= 0 and
 // < than the total number of states in the machine. This number identifies
-// exactly that state, or returns (-1 for an invalid state.
+// exactly that state, or returns STATE_MACHINE_INVALID for an invalid state.
+// The idea for this is if you want some sort of lookup table from state IDs to
+// an image or something similar.
 unsigned int state_machine_state_index(state_machine *m, unsigned int state);
 
+// for a states and actions array of pointers to null terminated strings
+// the number of elements in both arrays being exactly the number of states
+// and actions specified in state_machine_new
 void state_machine_print
     (state_machine *m, const char **states, const char **actions);
 
