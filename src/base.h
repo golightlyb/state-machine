@@ -29,6 +29,8 @@
  Define: -DBSE_LINUX/-DBSE_WINDOWS -DBITSPACE=32/64
  Optionally: -DBSE_WINDOWS with -DBSE_GRAPHICAL_EXCEPTIONS
  
+ 20140716: add X4/W3
+ 
 */
 
 #ifndef BSE_BASE_H
@@ -157,12 +159,20 @@
 #       error X3 already defined
 #   endif
 
+#   ifdef X4
+#       error X4 already defined
+#   endif
+
 #   ifdef W // warning
 #       error W already defined
 #   endif
 
 #   ifdef W2
 #       error W2 already defined
+#   endif
+
+#   ifdef W3
+#       error W3 already defined
 #   endif
 
 #   ifdef I // info
@@ -178,18 +188,25 @@
             X2(label, NULL)
 
 #       define X2(label, msg) \
-            bse_print_exception("Exception", __FILE__, __LINE__, STRING_FUNC, __STRING(label), msg, 0); \
+            bse_print_exception("Exception", __FILE__, __LINE__, STRING_FUNC, __STRING(label), msg, 0, 0); \
             goto err_##label;
 
 #       define X3(label, msg, errnum) \
-            bse_print_exception("Exception", __FILE__, __LINE__, STRING_FUNC, __STRING(label), msg, errnum); \
+            bse_print_exception("Exception", __FILE__, __LINE__, STRING_FUNC, __STRING(label), msg, errnum, 0); \
+            goto err_##label;
+
+#       define X4(label, msg, errnum, detail) \
+            bse_print_exception("Exception", __FILE__, __LINE__, STRING_FUNC, __STRING(label), msg, errnum, (int) (detail)); \
             goto err_##label;
 
 #       define W(msg) \
-            bse_print_warning("Warning", __FILE__, __LINE__, STRING_FUNC, msg, 0);
+            bse_print_warning("Warning", __FILE__, __LINE__, STRING_FUNC, msg, 0, 0);
 
 #       define W2(msg, errnum) \
-            bse_print_warning("Warning", __FILE__, __LINE__, STRING_FUNC, msg, errnum);
+            bse_print_warning("Warning", __FILE__, __LINE__, STRING_FUNC, msg, errnum, 0);
+
+#       define W3(msg, errnum, detail) \
+            bse_print_warning("Warning", __FILE__, __LINE__, STRING_FUNC, msg, errnum, (int) (detail));
 
 #       define I(msg) \
             bse_print_info(__FILE__, __LINE__, STRING_FUNC, msg, NULL, 0);
@@ -198,13 +215,15 @@
             bse_print_info(__FILE__, __LINE__, STRING_FUNC, msg, vs, v);
 
 #   else
-#       define X(label)               goto err_##label;
-#       define X2(label, msg)         goto err_##label;
-#       define X3(label, msg, errnum) goto err_##label;
-#       define W(msg)          NOP;
-#       define W2(msg, errnum) NOP;
-#       define I(msg)          NOP;
-#       define I2(msg)         NOP;
+#       define X(label)                         goto err_##label;
+#       define X2(label, msg)                   goto err_##label;
+#       define X3(label, msg, errnum)           goto err_##label;
+#       define X4(label, msg, errnum, detail)   goto err_##label;
+#       define W(msg)                           NOP;
+#       define W2(msg, errnum)                  NOP;
+#       define W2(msg, errnum, detail)          NOP;
+#       define I(msg)                           NOP;
+#       define I2(msg)                          NOP;
 #endif
 
 void bse_print_exception
@@ -215,7 +234,8 @@ void bse_print_exception
     const char *func,
     const char *label,
     const char *msg,
-    int errnum
+    int errnum,
+    int detail
 );
 
 void bse_print_warning
@@ -225,7 +245,8 @@ void bse_print_warning
     unsigned int line,
     const char *func,
     const char *msg,
-    int errnum
+    int errnum,
+    int detail
 );
 
 void bse_print_info

@@ -158,9 +158,9 @@ int state_machine_add_transition
     unsigned int a = P(state_index)(m, from);
     unsigned int b = P(state_index)(m, to);
     
-    if (a >= m->states)       { X2(bad_arg, "invalid from state"); }
-    if (b >= m->states)       { X2(bad_arg, "invalid to state"); }
-    if (action >= m->actions) { X2(bad_arg, "invalid action"); }
+    if (a >= m->states)       { X4(bad_arg, "invalid from state", 0, from); }
+    if (b >= m->states)       { X4(bad_arg, "invalid to state",   0, to); }
+    if (action >= m->actions) { X4(bad_arg, "invalid action",     0, action); }
     
     m->transitions[(a * m->actions) + action] = b;
     
@@ -193,16 +193,42 @@ int state_machine_add_transition_from_all_states
 }
 
 
+int state_machine_add_transition_from_all_states_replacing
+    (state_machine *m, unsigned int action,
+     unsigned int replace, unsigned int with, unsigned int mask)
+{
+    if (!m)                                { X(bad_arg); }
+    if (action >= m->actions)              { X2(bad_arg, "invalid action"); }
+    
+    for (unsigned int i = 0; i < m->states; i++)
+    {
+        unsigned int state = m->state_id[i];
+        if ((mask & state) != mask) { continue; }
+        
+        unsigned int to = (state & ~replace) | with;
+        
+        if (!state_machine_add_transition(m, action, state, to))
+            { X(state_machine_add_transition); }
+    }
+    
+    return 1;
+    
+    err_state_machine_add_transition:
+        printf("Note that the state of the state_machine is now indeterminate\n");
+    err_bad_arg:
+        return 0;
+}
+
+
 unsigned int state_machine_take_action
     (state_machine *m, unsigned int state, unsigned int action)
 {
-    if (!m)                     { X(bad_arg); }
     if (action >= m->actions)   { X2(bad_arg, "invalid action"); }
     
     printf("take_action\n");
     
     unsigned int from = P(state_index)(m, state);
-    if (from >= m->states) { X2(bad_arg, "invalid state"); }
+    if (from >= m->states) { X4(bad_arg, "invalid state", 0, state); }
     
     unsigned int to = m->transitions[(from * m->actions) + action];
     if (to >= m->states) { return 0; }

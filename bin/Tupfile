@@ -21,6 +21,7 @@ ifeq (@(LINUX32_ENABLED),yes)
 : foreach $(ROOTDIR)/src/test/*.c |>                     $(LINUX32_CC) $(WARNINGS) -c %f -o %o |> linux32.o/test_%B.o
 : foreach $(ROOTDIR)/src/example/*.c |>                  $(LINUX32_CC) $(WARNINGS) -c %f -o %o |> linux32.o/example_%B.o
 : foreach $(ROOTDIR)/src/state-machine/*.c |>            $(LINUX32_CC) $(WARNINGS) -c %f -o %o |> linux32.o/SM_%B.o
+: foreach $(ROOTDIR)/src/state-machine/models/gui/*.c |> $(LINUX32_CC) $(WARNINGS) -c %f -o %o |> linux32.o/SM_models_gui_%B.o
 
 endif
 
@@ -34,6 +35,7 @@ ifeq (@(LINUX64_ENABLED),yes)
 : foreach $(ROOTDIR)/src/test/*.c |>                     $(LINUX64_CC) $(WARNINGS) -c %f -o %o |> linux64.o/test_%B.o
 : foreach $(ROOTDIR)/src/example/*.c |>                  $(LINUX64_CC) $(WARNINGS) -c %f -o %o |> linux64.o/example_%B.o
 : foreach $(ROOTDIR)/src/state-machine/*.c |>            $(LINUX64_CC) $(WARNINGS) -c %f -o %o |> linux64.o/SM_%B.o
+: foreach $(ROOTDIR)/src/state-machine/models/gui/*.c |> $(LINUX64_CC) $(WARNINGS) -c %f -o %o |> linux64.o/SM_models_gui_%B.o
 
 endif
 
@@ -47,6 +49,7 @@ ifeq (@(WIN32_ENABLED),yes)
 : foreach $(ROOTDIR)/src/test/*.c |>                     $(WIN32_CC) $(WARNINGS) -c %f -o %o |> win32.o/test_%B.o
 : foreach $(ROOTDIR)/src/example/*.c |>                  $(WIN32_CC) $(WARNINGS) -c %f -o %o |> win32.o/example_%B.o
 : foreach $(ROOTDIR)/src/state-machine/*.c |>            $(WIN32_CC) $(WARNINGS) -c %f -o %o |> win32.o/SM_%B.o
+: foreach $(ROOTDIR)/src/state-machine/models/gui/*.c |> $(WIN32_CC) $(WARNINGS) -c %f -o %o |> win32.o/SM_models_gui_%B.o
 
 endif
 
@@ -60,6 +63,7 @@ ifeq (@(WIN64_ENABLED),yes)
 : foreach $(ROOTDIR)/src/test/*.c |>                     $(WIN64_CC) $(WARNINGS) -c %f -o %o |> win64.o/test_%B.o
 : foreach $(ROOTDIR)/src/example/*.c |>                  $(WIN64_CC) $(WARNINGS) -c %f -o %o |> win64.o/example_%B.o
 : foreach $(ROOTDIR)/src/state-machine/*.c |>            $(WIN64_CC) $(WARNINGS) -c %f -o %o |> win64.o/SM_%B.o
+: foreach $(ROOTDIR)/src/state-machine/models/gui/*.c |> $(WIN64_CC) $(WARNINGS) -c %f -o %o |> win64.o/SM_models_gui_%B.o
 
 endif
 
@@ -71,11 +75,13 @@ endif
 ifeq (@(LINUX32_ENABLED),yes)
 : linux32.o/base.o linux32.o/SM_*.o linux32.o/test_*.o     |> $(LINUX32_LD) %f -o %o |> test-linux32
 : linux32.o/base.o linux32.o/SM_*.o linux32.o/example_1*.o |> $(LINUX32_LD) %f -o %o |> example1-linux32
+: linux32.o/base.o linux32.o/SM_*.o linux32.o/example_2*.o |> $(LINUX32_LD) %f -o %o |> example2-linux32
 endif
 
 ifeq (@(LINUX64_ENABLED),yes)
 : linux64.o/base.o linux64.o/SM_*.o linux64.o/test_*.o     |> $(LINUX64_LD) %f -o %o |> test-linux64
 : linux64.o/base.o linux64.o/SM_*.o linux64.o/example_1*.o |> $(LINUX64_LD) %f -o %o |> example1-linux64
+: linux64.o/base.o linux64.o/SM_*.o linux64.o/example_2*.o |> $(LINUX64_LD) %f -o %o |> example2-linux64
 endif
 
 
@@ -84,11 +90,13 @@ endif
 ifeq (@(WIN32_ENABLED),yes)
 : win32.o/base.o win32.o/SM_*.o win32.o/test_*.o     |> $(WIN32_LD) %f -o %o |> test-win32.exe
 : win32.o/base.o win32.o/SM_*.o win32.o/example_1*.o |> $(WIN32_LD) %f -o %o |> example1-win32.exe
+: win32.o/base.o win32.o/SM_*.o win32.o/example_2*.o |> $(WIN32_LD) %f -o %o |> example2-win32.exe
 endif
 
 ifeq (@(WIN64_ENABLED),yes)
 : win64.o/base.o win64.o/SM_*.o win64.o/test_*.o     |> $(WIN64_LD) %f -o %o |> test-win64.exe
 : win64.o/base.o win64.o/SM_*.o win64.o/example_1*.o |> $(WIN64_LD) %f -o %o |> example1-win64.exe
+: win64.o/base.o win64.o/SM_*.o win64.o/example_2*.o |> $(WIN64_LD) %f -o %o |> example2-win64.exe
 endif
 
 

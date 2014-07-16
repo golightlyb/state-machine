@@ -1,3 +1,7 @@
+// This example models some sort of simple lamp with a button as an automata.
+
+// Public Domain BSAG 2014
+
 #include "state-machine/state-machine.h"
 #include <stdio.h>
 #include <assert.h>

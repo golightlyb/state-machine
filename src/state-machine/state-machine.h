@@ -55,6 +55,14 @@ int state_machine_add_transition
 int state_machine_add_transition_from_all_states
     (state_machine *m, unsigned int action, unsigned int to, unsigned int mask);
 
+// Add a transition from all states in the machine, but only if the ID of a
+// from state is in the given mask. Any existing transitions will be replaced.
+// The replace mask will be subtracted and the with mask will be added to
+// give the transition target for each state matching the mask.
+int state_machine_add_transition_from_all_states_replacing
+    (state_machine *m, unsigned int action,
+     unsigned int replace, unsigned int with, unsigned int mask);
+
 // Return the resulting state when an action is taken from a specific state of
 // a specific machine. If there is no transition, 0 is returned.
 unsigned int state_machine_take_action

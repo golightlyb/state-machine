@@ -56,7 +56,8 @@ void bse_print_exception
     const char *func,
     const char *label,
     const char *msg,
-    int errnum
+    int errnum,
+    int detail
 )
 {
     if (bse_quiet_exceptions) { return; }
@@ -78,9 +79,11 @@ void bse_print_exception
         (
             stderr,
             PROG_ID ": %s:%u %s: %s 'err_%s' at line %u\n"
-            "    (errno: %d, '%s')\n",
+            "    (errno: %d, '%s')\n"
+            "    (detail: %d)\n",
               file, line, func, type, label, line,
-              errnum, errnobuf
+              errnum, errnobuf,
+              detail
         );
     }
     else
@@ -90,10 +93,10 @@ void bse_print_exception
             stderr,
             PROG_ID ": %s:%u %s: %s 'err_%s' at line %u\n"
             "    (errno: %d, '%s')\n"
-            "    (detail: '%s')\n",
+            "    (detail: '%s', %d)\n",
               file, line, func, type, label, line,
               errnum, errnobuf,
-              msg
+              msg, detail
         );
     }
     
@@ -113,6 +116,7 @@ void bse_print_exception
             "Location: %s:%u\r\n"
             "Within: %s\r\n"
             "Errno: %d, '%s'\r\n"
+            "Detail number: %d\r\n"
             "Detail: %s\r\n\r\n"
             
             "Command line:\r\n\"%s\"\r\n\r\n"
@@ -125,6 +129,7 @@ void bse_print_exception
             file, line,
             func,
             errnum, errnobuf,
+            detail,
             msg,
             GetCommandLine()
         );
@@ -149,7 +154,8 @@ void bse_print_warning
     unsigned int line,
     const char *func,
     const char *msg,
-    int errnum
+    int errnum,
+    int detail
 )
 {
     if (bse_quiet_exceptions) { return; }
@@ -171,9 +177,11 @@ void bse_print_warning
         (
             stderr,
             PROG_ID ": %s:%u %s: %s at line %u\n"
-            "    (errno: %d, '%s')\n",
+            "    (errno: %d, '%s')\n"
+            "    (detail: %d)\n",
               file, line, func, type, line,
-              errnum, errnobuf
+              errnum, errnobuf,
+              detail
         );
     }
     else
@@ -183,10 +191,10 @@ void bse_print_warning
             stderr,
             PROG_ID ": %s:%u %s: %s at line %u\n"
             "    (errno: %d, '%s')\n"
-            "    (detail: '%s')\n",
+            "    (detail: '%s', %d)\n",
               file, line, func, type, line,
               errnum, errnobuf,
-              msg
+              msg, detail
         );
     }
     
@@ -206,6 +214,7 @@ void bse_print_warning
             "Location: %s:%u\r\n"
             "Within: %s\r\n"
             "Errno: %d, '%s'\r\n"
+            "Detail number: %d\r\n"
             "Detail: %s\r\n\r\n"
             
             "Command line:\r\n\"%s\"\r\n\r\n"
@@ -216,6 +225,7 @@ void bse_print_warning
             file, line,
             func,
             errnum, errnobuf,
+            detail,
             msg,
             GetCommandLine()
         );
