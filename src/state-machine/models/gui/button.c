@@ -169,53 +169,11 @@ state_machine *state_machine_new_gui_button(void)
         S(NOT_CLICKED) | S(UNFOCUSED) | S(ACTIVE),
         S(CLICKED) | S(FOCUSED) | S(INACTIVE),
         S(ENABLED) | S(NOT_CLICKED)));
-    //assert(state_machine_add_transition_from_all_states_replacing(m, A(ACCEL),
-     //   S(NOT_CLICKED), S(CLICKED), S(ENABLED) | S(FOCUSED) | S(NOT_CLICKED)));
     
     // for all clicked states, add a continue transition to mark the state
     // as handled, directly back to the equivalent unclicked state.
     assert(state_machine_add_transition_from_all_states_replacing(m, A(CONTINUE),
         S(CLICKED), S(NOT_CLICKED), S(CLICKED)));
-    
-/*
-# define ACTION_GUI_ENABLE       0
-# define ACTION_GUI_DISABLE      1
-# define ACTION_GUI_MOUSE_ENTER  2
-# define ACTION_GUI_MOUSE_LEAVE  3
-# define ACTION_GUI_MOUSE_DOWN   4 // activation using the mouse
-# define ACTION_GUI_MOUSE_UP     5
-# define ACTION_GUI_KEY_DOWN     6 // activation using the keyboard e.g. enter, space
-# define ACTION_GUI_KEY_UP       7
-# define ACTION_GUI_ACCELERATOR  8 // single-operation click
-                        // ACCEL
-# define ACTION_GUI_INPUT        9 // e.g. any typed input
-# define ACTION_GUI_FOCUS       10
-# define ACTION_GUI_UNFOCUS     11
-# define ACTION_GUI_CONTINUE    12 // for when a state blocks until handled
-# define NUM_ACTIONS_GUI        13
- */
-    
-    /*
-    assert(state_machine_add_state(m, STATE_OFF | STATE_WORKING));
-    assert(state_machine_add_state(m, STATE_ON  | STATE_WORKING));
-    assert(state_machine_add_state(m, STATE_OFF | STATE_BROKEN));
-    
-    assert(state_machine_add_transition(m, ACTION_TOGGLE,
-        STATE_OFF | STATE_WORKING,
-        STATE_ON  | STATE_WORKING));
-    
-    assert(state_machine_add_transition(m, ACTION_TOGGLE,
-        STATE_ON  | STATE_WORKING,
-        STATE_OFF | STATE_WORKING));
-    
-    assert(state_machine_add_transition_from_all_states(m, ACTION_BREAK,
-        STATE_OFF | STATE_BROKEN, STATE_WORKING));
-    
-    assert(state_machine_add_transition_from_all_states(m, ACTION_FIX,
-        STATE_OFF | STATE_WORKING, STATE_BROKEN));
-    
-    unsigned int state = STATE_OFF | STATE_WORKING;
-    */
     
     return m;
     
