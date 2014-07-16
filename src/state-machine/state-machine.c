@@ -170,7 +170,7 @@ int state_machine_add_state(state_machine *m, unsigned int state)
 }
 
 
-unsigned int P(state_index)(state_machine *m, unsigned int state_id)
+static unsigned int P(state_index)(state_machine *m, unsigned int state_id)
 {
     assert(m);
     
