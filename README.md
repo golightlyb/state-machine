@@ -39,3 +39,8 @@ Hopefully advantages of this system include:
   has moved into a state where the focus flag isn't set (states are just bitmasks
   of their properties e.g. (ENABLED | FOCUSED | HOVERED) is a very useful state
   ID!)
+* **Memory requriement for each element: 4 bytes.** The entire state of an
+  element is its location in the state machine, which is identified by a simple
+  integer.
+
+
