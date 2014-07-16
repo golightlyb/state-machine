@@ -31,3 +31,11 @@ Hopefully advantages of this system include:
   like a "RadioButton inherits from a CheckButton inherits from a ToggleButton
   inherits from a Button inherits from a Container inherits from a Widget" and
   the associated headache of worrying about where things go.
+* Advantages in simplifying logic like "can this element get keyboard focus?"
+  when it may not be able to. Simply send the focus action, and if the automata
+  accepts it then you're done. Similarly there may be reasons why an automata
+  moves to a state where it loses focus (what happens if the program disables
+  the currently focused element?) but all you have to check is if the automata
+  has moved into a state where the focus flag isn't set (states are just bitmasks
+  of their properties e.g. (ENABLED | FOCUSED | HOVERED) is a very useful state
+  ID!)
