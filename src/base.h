@@ -29,6 +29,7 @@
  Define: -DBSE_LINUX/-DBSE_WINDOWS -DBITSPACE=32/64
  Optionally: -DBSE_WINDOWS with -DBSE_GRAPHICAL_EXCEPTIONS
  
+ 20140718: add PROGRAM_NAME and expanded comments
  20140716: add X4/W3
  
 */
@@ -36,22 +37,43 @@
 #ifndef BSE_BASE_H
 #   define BSE_BASE_H
 
-/* Application-wide IDs */
-#   define PROG_ID   "state-machine"
+
+/* Application-wide ID
+ * -------------------
+ * This is the name that identifies the program. It is printed in error
+ * messages and can be used when printing any --help invocation message.
+ */
+#   define PROGRAM_NAME "state-machine" // GNU coreutil convention
+#   define PROG_ID PROGRAM_NAME // legacy bse style (deprecated; use PROGRAM_NAME)
 
 
-/* Platform specific folder names */
+/* Platform specific folder names
+ * ------------------------------
+ * These are used for naming any folders (e.g. ~/.local/share/PROGRAM_FOLDER)
+ * with a platform-specific naming convention (usually uppercase and space
+ * separated on Windows, and lowercase-hyphenated on Linux).
+ *
+ * Also defines the directory separator.
+ */
 #   if defined(BSE_WINDOWS)
-#       define PROG_FOLDER_NAME "State Machine Example"
+#       define PROGRAM_FOLDER  "State Machine Example"
+#       define PROG_FOLDER_NAME PROGRAM_FOLDER // deprecated
 #       define DIR_SEPARATOR "\\"
 #   elif defined(BSE_LINUX)
-#       define PROG_FOLDER_NAME "state-machine-example"
+#       define PROGRAM_FOLDER "state-machine-example"
+#       define PROG_FOLDER_NAME PROGRAM_FOLDER
 #       define DIR_SEPARATOR "/"
 #   else
 #       error Please define BSE_WINDOWS or BSE_LINUX
 #   endif
 
 
+/* Bitspace: please compile with -DBSE_BITSPACE=32 or =64
+ * ------------------------------------------------------
+ * This is not autodetected because it is more robust for the person managing
+ * the build system to say what they mean and have the program complain if
+ * the environment is not what is expected.
+ */
 #   if (!defined(BSE_BITSPACE))
 #       error Please define BSE_BITSPACE
 #   elif (BSE_BITSPACE == 32)
@@ -61,7 +83,10 @@
 #   endif
 
 
-/* Performance-impacting assertions; define BSE_DEBUG if debugging */
+/* Performance-impacting assertions
+ * --------------------------------
+ * Compile with -DBSE_DEBUG if debugging to turn these on.
+ */
 #   ifdef BSE_DEBUG
 #       include <assert.h>
 #       define DEBUG_ASSERT(x) assert(x)
@@ -88,7 +113,7 @@
 #   endif
 
 
-    /* == Basic Macros === */
+    /* Basic Macros */
 #   define UNUSED(x)            ((void)x)
 #   define NOP                  ((void)0)
 
@@ -121,7 +146,7 @@
 #   endif
 
 
-    /* == Inlining == */
+    /* Inlining */
 #   ifdef __GNUC__
 #       define INLINE       __inline__
 #       define FORCE_INLINE __attribute__((always_inline)) __inline__
@@ -134,7 +159,7 @@
 #   define HEADER_FUNC static FORCE_INLINE
 
 
-    /* === library symbol visibility (compile with -fvisibility=hidden) === */
+    /* Llibrary symbol visibility (compile with -fvisibility=hidden) */
 #   if (defined(__GNUC__)) && (__GNUC__ >= 4)
 #       define public   __attribute__ ((visibility ("default")))
 #       define private  __attribute__ ((visibility ("hidden")))
@@ -145,7 +170,43 @@
 #   endif
 
 
-    /* == Exceptions == */
+/* ============================== Exceptions ================================= */
+
+/*
+ * Compile with -DBSE_GRAPHICAL_EXCEPTIONS for graphical messageboxes on Windows
+ * Compile with -DQUIET_EXCEPTIONS to suppress all error messages
+ *
+ * X(foo)
+ *  -- print an error message, then goto the label err_foo
+ *
+ * X2(foo, "msg")
+ *  -- print an error message and "msg", then goto the label err_foo
+ *
+ * X3(foo, "msg", int errno)
+ *  -- print an error message and "msg" and the errno translated to a string,
+ *     then goto the label err_foo
+ *
+ * X4(foo, "msg", int errno, int detail)
+ *  -- print an error message and "msg" and the errno translated to a string
+ *     and the detail integer value then goto the label err_foo
+ *
+ * W("msg")
+ *  -- print a warning message and "msg"
+ *
+ * W2("msg", int errno)
+ *  -- print a warning message and "msg" and the errno translated to a string
+ *
+ * W3("msg", int errno, int detail)
+ *  -- print a warning message and "msg" and the errno translated to a string
+ *     and the detail integer value
+ *
+ * I("msg")
+ *  -- print an information message "msg"
+ *
+ * I2("msg", "value desc", int value)
+ *  -- print an information message "msg", and the detail integer value with
+ *     a given title.
+ */
 
 #   ifdef X // error
 #       error X already defined
@@ -259,6 +320,6 @@ void bse_print_info
     int value
 );
 
-extern int bse_quiet_exceptions;
+extern int bse_quiet_exceptions; // when set to 1, inhibits printing of errors
 
 #endif // BASE_H
