@@ -1,3 +1,5 @@
+#include "state-machine/state-machine.h"
+
 # define ACTION_GUI_ENABLE       0
 # define ACTION_GUI_DISABLE      1
 # define ACTION_GUI_MOUSE_ENTER  2
@@ -34,3 +36,7 @@
     )
 
 state_machine *state_machine_new_gui_button(void);
+
+const char **state_machine_gui_button_state_strings(void);
+
+const char **state_machine_gui_action_strings(void);

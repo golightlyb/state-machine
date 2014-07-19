@@ -33,6 +33,7 @@
 
 #include <stddef.h> // size_t
 #include <limits.h> // UINT_MAX
+#include <stdio.h> // FILE *
 
 #define STATE_MACHINE_INVALID UINT_MAX
 
@@ -106,10 +107,13 @@ unsigned int state_machine_take_action
 // an image or something similar.
 unsigned int state_machine_state_index(state_machine *m, unsigned int state);
 
+// prints output in DOT (graph description language) format
 // for a states and actions array of pointers to null terminated strings
 // the number of elements in both arrays being exactly the number of states
 // and actions specified in state_machine_new
+// the states array is optional and may also contain null strings
 void state_machine_print
-    (state_machine *m, const char **states, const char **actions);
+    (FILE *stream, state_machine *m,
+     const char *title, const char **states, const char **actions);
 
 #endif

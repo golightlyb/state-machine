@@ -47,9 +47,9 @@ int main(void)
     
     const char *states[] =
     {
-        "STATE_OFF | STATE_WORKING",
-        "STATE_ON  | STATE_WORKING",
-        "STATE_OFF | STATE_BROKEN"
+        "OFF | WORKING",
+        "ON  | WORKING",
+        "OFF | BROKEN"
     };
     
     assert(state_machine_add_transition(m, ACTION_TOGGLE,
@@ -68,7 +68,8 @@ int main(void)
     
     unsigned int state = STATE_OFF | STATE_WORKING;
     
-    state_machine_print(m, states, actions);
+    // print in the DOT graph description language.
+    state_machine_print(stdout, m, "lamp", states, actions);
     
     while (1)
     {

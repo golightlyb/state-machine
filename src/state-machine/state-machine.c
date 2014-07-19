@@ -284,27 +284,49 @@ unsigned int state_machine_state_index(state_machine *m, unsigned int state)
 
 
 void state_machine_print
-    (state_machine *m, const char **states, const char **actions)
+    (FILE *stream, state_machine *m,
+     const char *title, const char **states, const char **actions)
 {
+    if (!stream)  { X(bad_arg); }
     if (!m)       { X(bad_arg); }
-    if (!states)  { X(bad_arg); }
+    if (!title)   { X(bad_arg); }
     if (!actions) { X(bad_arg); }
     
-    printf("state_machine_print: %u states %u actions\n", m->states, m->actions);
+    printf("digraph \"%s\" {\n", title);
     
     for (unsigned int i = 0; i < m->states; i++)
     {
-        printf("    state %u %s:\n", m->state_id[i], states[i]);
+        unsigned int offset = i * m->actions;
         
-        for (unsigned int j = 0; j < m->actions; j++)
+        for (unsigned int j = 0; j < m->actions; j++, offset++)
         {
-            unsigned int to = m->transitions[(i * m->actions) + j];
+            unsigned int to = m->transitions[offset];
             if (to >= m->states) { continue; }
             
-            printf("        action %u %s -> state %u %s\n",
-                    j, actions[j], m->state_id[to], states[to]);
+            const char *string_from = NULL;
+            const char *string_to = NULL;
+            
+            char string_from_id[11];
+            char string_to_id[11];
+            
+            sprintf(string_from_id, "%u", i);
+            sprintf(string_to_id,   "%u", to);
+            
+            if (states)
+            {
+                string_from = states[i];
+                string_to   = states[to];
+            }
+            
+            if (!string_from) { string_from = string_from_id; }
+            if (!string_to)   { string_to   = string_to_id; }
+            
+            printf("    \"%s\" -> \"%s\" [ label=\"%s\" ]\n",
+                   string_from, string_to, actions[j]);
         }
     }
+    
+    printf("}\n");
     
     err_bad_arg:
         return;

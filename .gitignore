@@ -8,3 +8,9 @@
 /test.out
 /cppcheck.txt
 /*.pdf
+/state-machine.config
+/state-machine.creator
+/state-machine.creator.user
+/state-machine.files
+/state-machine.includes
+/state-machine.user

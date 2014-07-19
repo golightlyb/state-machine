@@ -2,6 +2,11 @@ Experiment in using a state machine to specify the low-level behaviour of
 Graphical User Interface (GUI) elements, as opposed to a typical Object Oriented
 approach.
 
+![diagram](http://www.heroextant.net/hexgen2014/screenshots/2014/july/lamp-dot.png)
+
+**Image:** output writin in the DOT graph description language and viewed with `xdot`
+
+
 See `src/example/1-example.c` for a demonstration of how to construct a simple
 state machine and interact with it.
 

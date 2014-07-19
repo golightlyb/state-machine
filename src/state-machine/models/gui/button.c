@@ -59,6 +59,40 @@
 //#define S_EHfAC (S(ENABLED) | S(HOVERED) | S(UNFOCUSED) | S(ACTIVE) | S(CLICKED))
 //#define S_EhFAC (S(ENABLED) | S(NOT_HOVERED) | S(FOCUSED) | S(ACTIVE) | S(CLICKED))
 
+
+const char **state_machine_gui_button_state_strings(void)
+{
+    static const char *states[] =
+    {
+        "Dh",
+        "DH",
+        
+        "Ehfac",
+        
+        "EHFac",
+        "EhFac",
+        "EhfAc",
+        "EhfaC",
+        
+        "EHfac",
+        "EhFac",
+        "EhfAc",
+        "EhfaC",
+        
+        "EHFac",
+        "EHfAc",
+        "EHfaC",
+        "EhFAc",
+        "EhFaC",
+        
+        "EHFAc",
+        "EHFaC"
+    };
+    
+    return states;
+}
+
+
 state_machine *state_machine_new_gui_button(void)
 {
     state_machine *m = state_machine_new(23, NUM_ACTIONS_GUI);
