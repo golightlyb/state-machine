@@ -257,8 +257,6 @@ unsigned int state_machine_take_action
 {
     if (action >= m->actions)   { X2(bad_arg, "invalid action"); }
     
-    printf("take_action\n");
-    
     unsigned int from = P(state_index)(m, state);
     if (from >= m->states) { X4(bad_arg, "invalid state", 0, state); }
     
