@@ -30,7 +30,7 @@
 #define STATE_GUI_CHECKED     1024u
 #define STATE_GUI_UNCHECKED   2048u
 
-#define NUM_STATES_GUI 32; // limit on number of state flag combinations used
+#define NUM_STATES_GUI 32 // limit on number of state flag combinations used
 
 #define STATE_GUI_BUTTON_DEFAULT (0 \
     | STATE_GUI_ENABLED \
