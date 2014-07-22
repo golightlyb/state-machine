@@ -129,11 +129,11 @@
  * and commonly accepted by a *_new_using variant of most *_new functions.
  * (If this doesn't interest you then just ignore it).
  */
-#   ifdef BSE_USE_MEMORY_MANAGER
+    typedef struct bse_simple_memory_manager  bse_simple_memory_manager;
+    typedef struct bse_aligned_memory_manager bse_aligned_memory_manager;
+
+#   ifdef BSE_EXPOSE_MEMORY_MANAGER
 #       include <stddef.h>
-        
-        typedef struct bse_simple_memory_manager;
-        typedef struct bse_aligned_memory_manager;
         
         struct bse_simple_memory_manager
         {

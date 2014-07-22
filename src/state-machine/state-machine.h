@@ -31,6 +31,10 @@
 #ifndef STATE_MACHINE_H
 #define STATE_MACHINE_H
 
+#ifndef BSE_BASE_H
+#   include "base.h"
+#endif
+
 #include <stddef.h> // size_t
 #include <limits.h> // UINT_MAX
 #include <stdio.h> // FILE *
@@ -38,18 +42,6 @@
 #define STATE_MACHINE_INVALID UINT_MAX
 
 typedef struct state_machine state_machine;
-typedef struct state_machine_memory_manager state_machine_memory_manager;
-
-// Optional: concrete definition of a structure used to indicate how memory
-// should be allocated or deallocated for a state machine. Fill in the function
-// pointers and the user_arg for your memory manager state, if any.
-// Otherwise use state_machine_new to use default malloc/free behaviour.
-struct state_machine_memory_manager
-{
-    void *(*allocator)(size_t size, void *user_arg);
-    void (*deallocator)(void *ptr, size_t size, void *user_arg);
-    void *user_arg;
-};
 
 // Create a state machine that will hold a given number of unique states
 // and a certain size alphabet of actions. For best results the number of
@@ -60,7 +52,7 @@ state_machine *state_machine_new(unsigned int states, unsigned int actions);
 // As state_machine_new, but accepts a structure indicating how memory should
 // be allocated and deallocated.
 state_machine *state_machine_new_using
-    (unsigned int states, unsigned int actions, state_machine_memory_manager *mgr);
+    (unsigned int states, unsigned int actions, bse_simple_memory_manager *mgr);
 
 // Frees the memory associated with a state machine
 void state_machine_free(state_machine *m);

@@ -28,6 +28,7 @@
  
 */
 
+#define BSE_EXPOSE_MEMORY_MANAGER
 #include "base.h" // eXceptions
 #include "state-machine/state-machine.h"
 #include <stddef.h> // NULL
@@ -41,7 +42,7 @@
 
 struct state_machine
 {
-    state_machine_memory_manager mgr;
+    bse_simple_memory_manager mgr;
     
     unsigned int states;
     unsigned int actions;
@@ -54,33 +55,29 @@ struct state_machine
 };
 
 
-void *bse_default_malloc(size_t size, void *arg);
-void bse_default_free(void *ptr, size_t size, void *arg);
-
-
 static void *P(new)(state_machine *m, size_t size)
 {
     if (!size) { return NULL; }
-    return m->mgr.allocator(size, m->mgr.user_arg);
+    return m->mgr.allocate(size, m->mgr.user_arg);
 }
 
 
 static void P(free)(state_machine *m, void *memory, size_t size)
 {
     if (!memory) { return; }
-    m->mgr.deallocator(memory, size, m->mgr.user_arg);
+    m->mgr.deallocate(memory, size, m->mgr.user_arg);
 }
 
 
 state_machine *state_machine_new_using
-    (unsigned int states, unsigned int actions, state_machine_memory_manager *mgr)
+    (unsigned int states, unsigned int actions, bse_simple_memory_manager *mgr)
 {
     if (!mgr) { X(bad_arg); }
     
-    state_machine *m = mgr->allocator(sizeof(state_machine), mgr->user_arg);
+    state_machine *m = mgr->allocate(sizeof(state_machine), mgr->user_arg);
     if (!m) { X(allocate_state_machine); }
     
-    memcpy(&m->mgr, mgr, sizeof(state_machine_memory_manager));
+    memcpy(&m->mgr, mgr, sizeof(bse_simple_memory_manager));
     
     m->states  = states;
     m->actions = actions;
@@ -109,10 +106,10 @@ state_machine *state_machine_new_using
 
 state_machine *state_machine_new(unsigned int states, unsigned int actions)
 {
-    state_machine_memory_manager mgr;
-    mgr.allocator   = bse_default_malloc;
-    mgr.deallocator = bse_default_free;
-    mgr.user_arg    = NULL;
+    bse_simple_memory_manager mgr;
+    mgr.allocate   = bse_default_malloc;
+    mgr.deallocate = bse_default_free;
+    mgr.user_arg   = NULL;
     
     return state_machine_new_using(states, actions, &mgr);
 }
