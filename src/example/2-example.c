@@ -37,7 +37,7 @@ int input(void)
 
 
 // shorthand
-#define S(x) STATE_GUI_BUTTON_##x
+#define S(x) STATE_GUI_##x
 #define A(x) ACTION_GUI_##x
 #define HAS(state, flag) ((state & flag) == flag)
 
@@ -46,7 +46,7 @@ int main(void)
     state_machine *m = state_machine_new_gui_button();
     assert(m);
     
-    unsigned int state = S(DEFAULT);
+    unsigned int state = STATE_GUI_BUTTON_DEFAULT;
     
     while (1)
     {

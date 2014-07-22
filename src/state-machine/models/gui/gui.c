@@ -33,10 +33,11 @@ const char **state_machine_gui_action_strings(void)
         "input",
         "focus",
         "unfocus",
-        "continue"
+        "continue",
+        "scroll"
     };
     
-    assert(NUM_ACTIONS_GUI == 13); // reminder to update the string table
+    assert(NUM_ACTIONS_GUI == 14); // reminder to update the string table
     
     return actions;
 }

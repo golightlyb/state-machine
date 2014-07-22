@@ -34,7 +34,7 @@
 #include "state-machine/models/gui.h"
 #include <assert.h>
 
-#define S(x) STATE_GUI_BUTTON_##x
+#define S(x) STATE_GUI_##x
 #define A(x) ACTION_GUI_##x
 
 #define S_Dh (S(DISABLED) | S(NOT_HOVERED)  | S(UNFOCUSED) | S(INACTIVE) | S(NOT_CLICKED))

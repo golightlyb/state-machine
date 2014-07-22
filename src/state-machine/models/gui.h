@@ -14,25 +14,30 @@
 # define ACTION_GUI_FOCUS       10
 # define ACTION_GUI_UNFOCUS     11
 # define ACTION_GUI_CONTINUE    12 // for when a state blocks until handled
-# define NUM_ACTIONS_GUI        13
+# define ACTION_GUI_SCROLL      13
+# define NUM_ACTIONS_GUI        14
 
-#define STATE_GUI_BUTTON_ENABLED       1u
-#define STATE_GUI_BUTTON_DISABLED      2u
-#define STATE_GUI_BUTTON_HOVERED       4u
-#define STATE_GUI_BUTTON_NOT_HOVERED   8u
-#define STATE_GUI_BUTTON_FOCUSED      16u
-#define STATE_GUI_BUTTON_UNFOCUSED    32u
-#define STATE_GUI_BUTTON_ACTIVE       64u
-#define STATE_GUI_BUTTON_INACTIVE    128u
-#define STATE_GUI_BUTTON_CLICKED     256u
-#define STATE_GUI_BUTTON_NOT_CLICKED 512u
+#define STATE_GUI_ENABLED        1u // TODO make states common too
+#define STATE_GUI_DISABLED       2u
+#define STATE_GUI_HOVERED        4u
+#define STATE_GUI_NOT_HOVERED    8u
+#define STATE_GUI_FOCUSED       16u
+#define STATE_GUI_UNFOCUSED     32u
+#define STATE_GUI_ACTIVE        64u
+#define STATE_GUI_INACTIVE     128u
+#define STATE_GUI_CLICKED      256u
+#define STATE_GUI_NOT_CLICKED  512u
+#define STATE_GUI_CHECKED     1024u
+#define STATE_GUI_UNCHECKED   2048u
+
+#define NUM_STATES_GUI 32; // limit on number of state flag combinations used
 
 #define STATE_GUI_BUTTON_DEFAULT (0 \
-    | STATE_GUI_BUTTON_ENABLED \
-    | STATE_GUI_BUTTON_NOT_HOVERED \
-    | STATE_GUI_BUTTON_UNFOCUSED \
-    | STATE_GUI_BUTTON_INACTIVE \
-    | STATE_GUI_BUTTON_NOT_CLICKED \
+    | STATE_GUI_ENABLED \
+    | STATE_GUI_NOT_HOVERED \
+    | STATE_GUI_UNFOCUSED \
+    | STATE_GUI_INACTIVE \
+    | STATE_GUI_NOT_CLICKED \
     )
 
 state_machine *state_machine_new_gui_button(void);
